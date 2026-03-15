@@ -54,6 +54,7 @@ tests/
   6.user-management.spec.js
   7.audit-management.spec.js
   8.notification-management.spec.js
+  9.chat-history.spec.js
 playwright.config.js
 playwright/.auth/user.json
 test-results/
@@ -72,6 +73,7 @@ playwright-report/
 - [`tests/6.user-management.spec.js`](/Users/reposado/BNJ-Playwright/tests/6.user-management.spec.js) covers the User Management page using the shared authenticated session.
 - [`tests/7.audit-management.spec.js`](/Users/reposado/BNJ-Playwright/tests/7.audit-management.spec.js) covers the Audit Management page using the shared authenticated session.
 - [`tests/8.notification-management.spec.js`](/Users/reposado/BNJ-Playwright/tests/8.notification-management.spec.js) covers the Notification Management page using the shared authenticated session.
+- [`tests/9.chat-history.spec.js`](/Users/reposado/BNJ-Playwright/tests/9.chat-history.spec.js) covers the Chat History page using the shared authenticated session.
 
 The stored auth state is written to `playwright/.auth/user.json`.
 
@@ -137,6 +139,12 @@ Run only the Notification Management spec:
 npm run test:notification-management
 ```
 
+Run only the Chat History spec:
+
+```bash
+npm run test:chat-history
+```
+
 Run the CEO Dashboard spec in headed mode:
 
 ```bash
@@ -183,6 +191,12 @@ Run the Notification Management spec in headed mode:
 
 ```bash
 npm run test:notification-management:headed
+```
+
+Run the Chat History spec in headed mode:
+
+```bash
+npm run test:chat-history:headed
 ```
 
 Run with Playwright UI mode:
@@ -233,6 +247,12 @@ Run the Notification Management spec in UI mode:
 npm run test:notification-management:ui
 ```
 
+Run the Chat History spec in UI mode:
+
+```bash
+npm run test:chat-history:ui
+```
+
 Run a subset by test title:
 
 ```bash
@@ -279,6 +299,12 @@ Run only the Notification Management scheduled delivery checks:
 
 ```bash
 npm run test:notification-management:scheduled
+```
+
+Run only the Chat History table checks:
+
+```bash
+npm run test:chat-history:table
 ```
 
 List all discovered tests:
@@ -341,6 +367,7 @@ The current suite covers:
 - User Management page load, search, user table, pagination, chat button, and basic performance checks
 - Audit Management page load, upload sections, footer actions, chat button, and basic performance checks
 - Notification Management page load, health alerts, scheduled delivery, footer actions, chat button, and basic performance checks
+- Chat History page load, date range filter, history table, pagination, chat button, and basic performance checks
 - AI Chatbot launcher, panel content, quick prompts, input, and close behavior
 - Claims dashboard page load
 - Claims general and current operation health sections
