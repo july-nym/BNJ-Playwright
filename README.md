@@ -1,6 +1,6 @@
 # BNJ Playwright
 
-Playwright end-to-end test suite for the BNJ CEO Dashboard.
+Playwright end-to-end test suite for the BNJ dashboards.
 
 ## Requirements
 
@@ -47,6 +47,7 @@ Notes:
 tests/
   global.setup.js
   1.ceo-dashboard.spec.js
+  2.finance-dashboard.spec.js
 playwright.config.js
 playwright/.auth/user.json
 test-results/
@@ -58,6 +59,7 @@ playwright-report/
 - [`tests/global.setup.js`](/Users/reposado/BNJ-Playwright/tests/global.setup.js) logs in once and saves the authenticated session.
 - [`playwright.config.js`](/Users/reposado/BNJ-Playwright/playwright.config.js) runs the `setup` project first, then the `chromium` project.
 - [`tests/1.ceo-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/1.ceo-dashboard.spec.js) reuses the saved session through `storageState`.
+- [`tests/2.finance-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/2.finance-dashboard.spec.js) covers the Finance dashboard with the same shared authenticated session.
 
 The stored auth state is written to `playwright/.auth/user.json`.
 
@@ -81,10 +83,22 @@ Run only the CEO Dashboard spec:
 npm run test:ceo
 ```
 
+Run only the Finance Dashboard spec:
+
+```bash
+npm run test:finance
+```
+
 Run the CEO Dashboard spec in headed mode:
 
 ```bash
 npm run test:ceo:headed
+```
+
+Run the Finance Dashboard spec in headed mode:
+
+```bash
+npm run test:finance:headed
 ```
 
 Run with Playwright UI mode:
@@ -93,10 +107,22 @@ Run with Playwright UI mode:
 npm run test:ceo:ui
 ```
 
+Run the Finance Dashboard spec in UI mode:
+
+```bash
+npm run test:finance:ui
+```
+
 Run a subset by test title:
 
 ```bash
 npm run test:ceo:general-health
+```
+
+Run the Finance dashboard General Health subset:
+
+```bash
+npm run test:finance:general-health
 ```
 
 List all discovered tests:
@@ -155,6 +181,11 @@ Prettier configuration lives in [`.prettierrc.json`](/Users/reposado/BNJ-Playwri
 
 The current suite covers:
 
+- Finance dashboard page load
+- Finance general and current financial health sections
+- Finance score cards and donut charts
+- Finance recent activity and task requiring actions
+- Finance chat widget and basic performance checks
 - Dashboard page load
 - General Health (ICS) section
 - Health metric cards

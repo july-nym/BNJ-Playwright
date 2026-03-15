@@ -1,13 +1,13 @@
 // ============================================================
-// Sanity Check - CEO Dashboard
-// URL  : /ceo-dashboard
+// Sanity Check - Finance Dashboard
+// URL  : /finance
 // Tool : Playwright
 // ============================================================
 //
 // HOW TO RUN:
-//   npx playwright test tests/1.ceo-dashboard.spec.js
-//   npx playwright test tests/1.ceo-dashboard.spec.js --ui
-//   npx playwright test tests/1.ceo-dashboard.spec.js --grep "General Health"
+//   npx playwright test tests/2.finance-dashboard.spec.js
+//   npx playwright test tests/2.finance-dashboard.spec.js --ui
+//   npx playwright test tests/2.finance-dashboard.spec.js --grep "General Health"
 //
 // NOTE:
 //   Auth is handled by global.setup.js (runs once before all tests).
@@ -21,10 +21,18 @@ const { test, expect } = require("@playwright/test");
 
 const BASE_URL =
   process.env.BASE_URL || "https://web-bnj-ai-dev-8fdaab.azurewebsites.net";
-const DASHBOARD_URL = `${BASE_URL}/ceo-dashboard`;
+const DASHBOARD_URL = `${BASE_URL}/finance`;
 const SECTION_SELECTOR =
   "section, article, [role='region'], [class*='card'], [class*='section'], [class*='widget'], [class*='panel']";
 const TIMESTAMP_REGEX = /\b\d+\s*(days|hours|minutes|seconds)\s*ago\b/i;
+const PROGRESS_BAR_SELECTOR = [
+  '[role="progressbar"]',
+  '[class*="progress"]',
+  '[class*="bar"]',
+  '[class*="gradient"]',
+  '[class*="from-red"]',
+  '[class*="to-yellow"]',
+].join(", ");
 const AI_SURFACE_SELECTOR = [
   '[role="dialog"]',
   '[aria-modal="true"]',
@@ -38,24 +46,25 @@ const AI_SURFACE_SELECTOR = [
   'input[placeholder*="Type"]',
 ].join(", ");
 
-const HEALTH_METRIC_CARDS = [
-  { id: "TC-CEO-006", title: "Current Operation Health" },
-  { id: "TC-CEO-007", title: "Current Financial Health" },
-  { id: "TC-CEO-008", title: "YoY Health" },
+const FINANCE_METRIC_CARDS = [
+  { id: "TC-FIN-009", title: "A/R & A/P Score" },
+  { id: "TC-FIN-010", title: "Profit /Loss Score" },
+  { id: "TC-FIN-011", title: "Cashflow Score" },
 ];
 
 const ACTION_TASKS = [
-  { id: "TC-CEO-021", title: "Health Score Warning" },
+  { id: "TC-FIN-018", title: "Health Score Warning" },
   {
-    id: "TC-CEO-022",
+    id: "TC-FIN-019",
     title: "Forecast vs Actual Variance Exceeded",
   },
-  { id: "TC-CEO-023", title: "Inventory Shortage Projected" },
-  { id: "TC-CEO-024", title: "Cashflow Shortage Detected" },
+  { id: "TC-FIN-020", title: "Inventory Shortage Projected" },
+  { id: "TC-FIN-021", title: "Cashflow Shortage Detected" },
+  { id: "TC-FIN-022", title: "Sudden Financial Change Detected" },
 ];
 
 async function expectDashboardReady(page) {
-  await expect(page).toHaveURL(/ceo-dashboard/, { timeout: 30000 });
+  await expect(page).toHaveURL(/finance/, { timeout: 30000 });
   await expect(
     page.getByText("General Health (ICS)", { exact: false })
   ).toBeVisible({ timeout: 30000 });
@@ -90,19 +99,19 @@ function isCriticalConsoleError(message) {
   );
 }
 
-test.describe("CEO Dashboard - Sanity Check", () => {
+test.describe("Finance Dashboard - Sanity Check", () => {
   test.beforeEach(async ({ page }) => {
     await goToDashboard(page);
   });
 
   test.describe("Page Load & Navigation", () => {
-    test("TC-CEO-001 | Dashboard page loads successfully", async ({ page }) => {
-      await expect(page).toHaveURL(/ceo-dashboard/);
+    test("TC-FIN-001 | Dashboard page loads successfully", async ({ page }) => {
+      await expect(page).toHaveURL(/finance/);
       await expect(page).toHaveTitle(/.+/);
-      console.log("Page loaded successfully");
+      console.log("Finance page loaded successfully");
     });
 
-    test("TC-CEO-002 | Benjamin & Joseph logo is visible", async ({ page }) => {
+    test("TC-FIN-002 | Benjamin & Joseph logo is visible", async ({ page }) => {
       const logo = page
         .locator('header img, img[alt*="Benjamin"], img[alt*="Joseph"], .logo')
         .first();
@@ -113,7 +122,7 @@ test.describe("CEO Dashboard - Sanity Check", () => {
   });
 
   test.describe("General Health (ICS)", () => {
-    test("TC-CEO-003 | General Health section is visible", async ({ page }) => {
+    test("TC-FIN-003 | General Health section is visible", async ({ page }) => {
       const generalHealth = await getContainerByText(
         page,
         "General Health (ICS)"
@@ -125,7 +134,7 @@ test.describe("CEO Dashboard - Sanity Check", () => {
       console.log("General Health (ICS) section visible");
     });
 
-    test("TC-CEO-004 | General Health score is displayed (format: XX/100)", async ({
+    test("TC-FIN-004 | General Health score is displayed (format: XX/100)", async ({
       page,
     }) => {
       const generalHealth = await getContainerByText(
@@ -137,27 +146,71 @@ test.describe("CEO Dashboard - Sanity Check", () => {
         .first();
 
       await expect(scoreText).toBeVisible({ timeout: 15000 });
-      console.log("Health score displayed");
+      console.log("General Health score displayed");
     });
 
-    test("TC-CEO-005 | General Health progress bar is rendered", async ({
+    test("TC-FIN-005 | General Health progress bar is rendered", async ({
       page,
     }) => {
       const generalHealth = await getContainerByText(
         page,
         "General Health (ICS)"
       );
-      const progressBar = generalHealth
-        .locator('[role="progressbar"], [class*="progress"], [class*="bar"]')
-        .first();
+      const progressBar = generalHealth.locator(PROGRESS_BAR_SELECTOR).first();
 
       await expect(progressBar).toBeVisible({ timeout: 15000 });
-      console.log("Progress bar visible");
+      console.log("General Health progress bar visible");
     });
   });
 
-  test.describe("Health Metric Cards", () => {
-    for (const { id, title } of HEALTH_METRIC_CARDS) {
+  test.describe("Current Financial Health", () => {
+    test("TC-FIN-006 | Current Financial Health section is visible", async ({
+      page,
+    }) => {
+      const financialHealth = await getContainerByText(
+        page,
+        "Current Financial Health"
+      );
+
+      await expect(
+        financialHealth.getByText("Current Financial Health", { exact: false })
+      ).toBeVisible({ timeout: 15000 });
+      console.log("Current Financial Health section visible");
+    });
+
+    test("TC-FIN-007 | Current Financial Health score is displayed (format: XX/100)", async ({
+      page,
+    }) => {
+      const financialHealth = await getContainerByText(
+        page,
+        "Current Financial Health"
+      );
+      const scoreText = financialHealth
+        .getByText(/\b\d{1,3}\s*\/\s*100\b/)
+        .first();
+
+      await expect(scoreText).toBeVisible({ timeout: 15000 });
+      console.log("Current Financial Health score displayed");
+    });
+
+    test("TC-FIN-008 | Current Financial Health progress bar is rendered", async ({
+      page,
+    }) => {
+      const financialHealth = await getContainerByText(
+        page,
+        "Current Financial Health"
+      );
+      const progressBar = financialHealth
+        .locator(PROGRESS_BAR_SELECTOR)
+        .first();
+
+      await expect(progressBar).toBeVisible({ timeout: 15000 });
+      console.log("Current Financial Health progress bar visible");
+    });
+  });
+
+  test.describe("Finance Metric Cards", () => {
+    for (const { id, title } of FINANCE_METRIC_CARDS) {
       test(`${id} | ${title} card is visible`, async ({ page }) => {
         const card = await getContainerByText(page, title);
 
@@ -168,10 +221,10 @@ test.describe("CEO Dashboard - Sanity Check", () => {
       });
     }
 
-    test("TC-CEO-009 | All 3 health metric donut charts are rendered", async ({
+    test("TC-FIN-012 | All 3 finance metric donut charts are rendered", async ({
       page,
     }) => {
-      for (const { title } of HEALTH_METRIC_CARDS) {
+      for (const { title } of FINANCE_METRIC_CARDS) {
         const card = await getContainerByText(page, title);
         const chart = card
           .locator(
@@ -182,16 +235,16 @@ test.describe("CEO Dashboard - Sanity Check", () => {
         await expect(chart).toBeVisible({ timeout: 15000 });
       }
 
-      console.log("Found chart element(s) for all health metric cards");
+      console.log("Found chart element(s) for all finance metric cards");
     });
 
-    test("TC-CEO-010 | Health metric scores are numeric values", async ({
+    test("TC-FIN-013 | Finance metric scores are numeric values", async ({
       page,
     }) => {
       const scoreRegex = /^\d{1,3}$/;
       const visibleScores = [];
 
-      for (const { title } of HEALTH_METRIC_CARDS) {
+      for (const { title } of FINANCE_METRIC_CARDS) {
         const card = await getContainerByText(page, title);
         const score = card.getByText(scoreRegex).first();
 
@@ -200,93 +253,12 @@ test.describe("CEO Dashboard - Sanity Check", () => {
       }
 
       expect(visibleScores).toHaveLength(3);
-      console.log("Found numeric score(s) for all health metric cards");
-    });
-  });
-
-  test.describe("Performance to Target Score", () => {
-    test("TC-CEO-011 | Performance to Target Score section is visible", async ({
-      page,
-    }) => {
-      const section = await getContainerByText(
-        page,
-        "Performance to Target Score"
-      );
-
-      await expect(
-        section.getByText("Performance to Target Score", { exact: false })
-      ).toBeVisible({ timeout: 15000 });
-      console.log("Performance to Target Score section visible");
-    });
-
-    test("TC-CEO-012 | Revenue label is displayed", async ({ page }) => {
-      const section = await getContainerByText(
-        page,
-        "Performance to Target Score"
-      );
-
-      await expect(section.getByText("Revenue", { exact: true })).toBeVisible({
-        timeout: 15000,
-      });
-      console.log("Revenue label visible");
-    });
-
-    test("TC-CEO-013 | Revenue value is displayed in SGD format", async ({
-      page,
-    }) => {
-      const section = await getContainerByText(
-        page,
-        "Performance to Target Score"
-      );
-
-      await expect(section.getByText(/SGD/i).first()).toBeVisible({
-        timeout: 15000,
-      });
-      console.log("SGD revenue value visible");
-    });
-
-    test("TC-CEO-014 | Ask AI button is present in chart section", async ({
-      page,
-    }) => {
-      const section = await getContainerByText(
-        page,
-        "Performance to Target Score"
-      );
-      const askAI = section.getByRole("button", { name: /Ask AI/i }).first();
-
-      await expect(askAI).toBeVisible({ timeout: 15000 });
-      console.log("Ask AI button visible");
-    });
-
-    test("TC-CEO-015 | Ask AI button is clickable", async ({ page }) => {
-      const section = await getContainerByText(
-        page,
-        "Performance to Target Score"
-      );
-      const askAI = section.getByRole("button", { name: /Ask AI/i }).first();
-
-      await expect(askAI).toBeEnabled({ timeout: 15000 });
-      await askAI.click();
-      await expect(page).toHaveURL(/ceo-dashboard/);
-      console.log("Ask AI button clickable");
-    });
-
-    test("TC-CEO-016 | Ask AI opens an AI interface", async ({ page }) => {
-      const section = await getContainerByText(
-        page,
-        "Performance to Target Score"
-      );
-      const askAI = section.getByRole("button", { name: /Ask AI/i }).first();
-
-      await expect(askAI).toBeEnabled({ timeout: 15000 });
-      await askAI.click();
-      await expectAiSurfaceToOpen(page);
-      console.log("Ask AI opened an AI interface");
+      console.log("Found numeric score(s) for all finance metric cards");
     });
   });
 
   test.describe("Recent Activity", () => {
-    test("TC-CEO-017 | Recent Activity section is visible", async ({
+    test("TC-FIN-014 | Recent Activity section is visible", async ({
       page,
     }) => {
       const section = await getContainerByText(page, "Recent Activity");
@@ -297,7 +269,7 @@ test.describe("CEO Dashboard - Sanity Check", () => {
       console.log("Recent Activity section visible");
     });
 
-    test("TC-CEO-018 | Recent Activity list has at least 1 item", async ({
+    test("TC-FIN-015 | Recent Activity list has at least 1 item", async ({
       page,
     }) => {
       const section = await getContainerByText(page, "Recent Activity");
@@ -308,7 +280,7 @@ test.describe("CEO Dashboard - Sanity Check", () => {
       console.log("Found recent activity item(s)");
     });
 
-    test("TC-CEO-019 | Recent Activity items display timestamps", async ({
+    test("TC-FIN-016 | Recent Activity items display timestamps", async ({
       page,
     }) => {
       const section = await getContainerByText(page, "Recent Activity");
@@ -321,7 +293,7 @@ test.describe("CEO Dashboard - Sanity Check", () => {
   });
 
   test.describe("Task Requiring Actions", () => {
-    test("TC-CEO-020 | Task Requiring Actions section is visible", async ({
+    test("TC-FIN-017 | Task Requiring Actions section is visible", async ({
       page,
     }) => {
       const section = await getContainerByText(page, "Task Requiring Actions");
@@ -348,14 +320,14 @@ test.describe("CEO Dashboard - Sanity Check", () => {
   });
 
   test.describe("Chat with AI", () => {
-    test("TC-CEO-025 | Chat with AI button is visible", async ({ page }) => {
+    test("TC-FIN-023 | Chat with AI button is visible", async ({ page }) => {
       await expect(
         page.getByRole("button", { name: /Chat with AI/i }).first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Chat with AI button visible");
     });
 
-    test("TC-CEO-026 | Chat with AI opens an AI interface", async ({
+    test("TC-FIN-024 | Chat with AI opens an AI interface", async ({
       page,
     }) => {
       const chatWithAI = page
@@ -370,8 +342,8 @@ test.describe("CEO Dashboard - Sanity Check", () => {
   });
 });
 
-test.describe("CEO Dashboard - Performance", () => {
-  test("TC-CEO-027 | Dashboard fully loads within 15 seconds", async ({
+test.describe("Finance Dashboard - Performance", () => {
+  test("TC-FIN-025 | Dashboard fully loads within 15 seconds", async ({
     page,
   }) => {
     const start = Date.now();
@@ -379,23 +351,25 @@ test.describe("CEO Dashboard - Performance", () => {
     await goToDashboard(page);
 
     const duration = Date.now() - start;
-    console.log(`Dashboard load time: ${duration}ms`);
+    console.log(`Finance dashboard load time: ${duration}ms`);
     expect(duration).toBeLessThan(15000);
-    console.log("Dashboard loaded within 15 seconds");
+    console.log("Finance dashboard loaded within 15 seconds");
   });
 
-  test("TC-CEO-028 | Dashboard screenshot (visual baseline)", async ({
+  test("TC-FIN-026 | Dashboard screenshot (visual baseline)", async ({
     page,
   }) => {
     await goToDashboard(page);
     await page.screenshot({
-      path: "test-results/ceo-dashboard-baseline.png",
+      path: "test-results/finance-dashboard-baseline.png",
       fullPage: true,
     });
-    console.log("Screenshot saved: test-results/ceo-dashboard-baseline.png");
+    console.log(
+      "Screenshot saved: test-results/finance-dashboard-baseline.png"
+    );
   });
 
-  test("TC-CEO-029 | Dashboard loads without critical console errors", async ({
+  test("TC-FIN-027 | Dashboard loads without critical console errors", async ({
     page,
   }) => {
     const consoleErrors = [];
