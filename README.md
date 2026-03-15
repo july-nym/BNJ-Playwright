@@ -48,6 +48,7 @@ tests/
   global.setup.js
   1.ceo-dashboard.spec.js
   2.finance-dashboard.spec.js
+  3.claims-dashboard.spec.js
 playwright.config.js
 playwright/.auth/user.json
 test-results/
@@ -60,6 +61,7 @@ playwright-report/
 - [`playwright.config.js`](/Users/reposado/BNJ-Playwright/playwright.config.js) runs the `setup` project first, then the `chromium` project.
 - [`tests/1.ceo-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/1.ceo-dashboard.spec.js) reuses the saved session through `storageState`.
 - [`tests/2.finance-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/2.finance-dashboard.spec.js) covers the Finance dashboard with the same shared authenticated session.
+- [`tests/3.claims-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/3.claims-dashboard.spec.js) covers the Claims dashboard with the same shared authenticated session.
 
 The stored auth state is written to `playwright/.auth/user.json`.
 
@@ -89,6 +91,12 @@ Run only the Finance Dashboard spec:
 npm run test:finance
 ```
 
+Run only the Claims Dashboard spec:
+
+```bash
+npm run test:claims
+```
+
 Run the CEO Dashboard spec in headed mode:
 
 ```bash
@@ -99,6 +107,12 @@ Run the Finance Dashboard spec in headed mode:
 
 ```bash
 npm run test:finance:headed
+```
+
+Run the Claims Dashboard spec in headed mode:
+
+```bash
+npm run test:claims:headed
 ```
 
 Run with Playwright UI mode:
@@ -113,6 +127,12 @@ Run the Finance Dashboard spec in UI mode:
 npm run test:finance:ui
 ```
 
+Run the Claims Dashboard spec in UI mode:
+
+```bash
+npm run test:claims:ui
+```
+
 Run a subset by test title:
 
 ```bash
@@ -123,6 +143,12 @@ Run the Finance dashboard General Health subset:
 
 ```bash
 npm run test:finance:general-health
+```
+
+Run the Claims dashboard General Health subset:
+
+```bash
+npm run test:claims:general-health
 ```
 
 List all discovered tests:
@@ -181,6 +207,11 @@ Prettier configuration lives in [`.prettierrc.json`](/Users/reposado/BNJ-Playwri
 
 The current suite covers:
 
+- Claims dashboard page load
+- Claims general and current operation health sections
+- Claims score cards and donut charts
+- Claims recent activity and task requiring actions
+- Claims chat widget and basic performance checks
 - Finance dashboard page load
 - Finance general and current financial health sections
 - Finance score cards and donut charts
