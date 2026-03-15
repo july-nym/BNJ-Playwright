@@ -50,6 +50,7 @@ tests/
   2.finance-dashboard.spec.js
   3.claims-dashboard.spec.js
   4.ai-chatbot.spec.js
+  5.target-benchmark.spec.js
 playwright.config.js
 playwright/.auth/user.json
 test-results/
@@ -64,6 +65,7 @@ playwright-report/
 - [`tests/2.finance-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/2.finance-dashboard.spec.js) covers the Finance dashboard with the same shared authenticated session.
 - [`tests/3.claims-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/3.claims-dashboard.spec.js) covers the Claims dashboard with the same shared authenticated session.
 - [`tests/4.ai-chatbot.spec.js`](/Users/reposado/BNJ-Playwright/tests/4.ai-chatbot.spec.js) focuses on the shared AI Chatbot widget behavior from the dashboard UI.
+- [`tests/5.target-benchmark.spec.js`](/Users/reposado/BNJ-Playwright/tests/5.target-benchmark.spec.js) covers the Target & Benchmark page using the shared authenticated session.
 
 The stored auth state is written to `playwright/.auth/user.json`.
 
@@ -105,6 +107,12 @@ Run only the AI Chatbot widget spec:
 npm run test:chatbot
 ```
 
+Run only the Target & Benchmark spec:
+
+```bash
+npm run test:target-benchmark
+```
+
 Run the CEO Dashboard spec in headed mode:
 
 ```bash
@@ -127,6 +135,12 @@ Run the AI Chatbot widget spec in headed mode:
 
 ```bash
 npm run test:chatbot:headed
+```
+
+Run the Target & Benchmark spec in headed mode:
+
+```bash
+npm run test:target-benchmark:headed
 ```
 
 Run with Playwright UI mode:
@@ -153,6 +167,12 @@ Run the AI Chatbot widget spec in UI mode:
 npm run test:chatbot:ui
 ```
 
+Run the Target & Benchmark spec in UI mode:
+
+```bash
+npm run test:target-benchmark:ui
+```
+
 Run a subset by test title:
 
 ```bash
@@ -175,6 +195,12 @@ Run only the AI Chatbot quick prompt checks:
 
 ```bash
 npm run test:chatbot:prompts
+```
+
+Run only the Target & Benchmark financial target checks:
+
+```bash
+npm run test:target-benchmark:financial-targets
 ```
 
 List all discovered tests:
@@ -233,6 +259,7 @@ Prettier configuration lives in [`.prettierrc.json`](/Users/reposado/BNJ-Playwri
 
 The current suite covers:
 
+- Target & Benchmark page load, target period, financial target fields, upload area, and basic performance checks
 - AI Chatbot launcher, panel content, quick prompts, input, and close behavior
 - Claims dashboard page load
 - Claims general and current operation health sections
