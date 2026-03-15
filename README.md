@@ -53,6 +53,7 @@ tests/
   5.target-benchmark.spec.js
   6.user-management.spec.js
   7.audit-management.spec.js
+  8.notification-management.spec.js
 playwright.config.js
 playwright/.auth/user.json
 test-results/
@@ -70,6 +71,7 @@ playwright-report/
 - [`tests/5.target-benchmark.spec.js`](/Users/reposado/BNJ-Playwright/tests/5.target-benchmark.spec.js) covers the Target & Benchmark page using the shared authenticated session.
 - [`tests/6.user-management.spec.js`](/Users/reposado/BNJ-Playwright/tests/6.user-management.spec.js) covers the User Management page using the shared authenticated session.
 - [`tests/7.audit-management.spec.js`](/Users/reposado/BNJ-Playwright/tests/7.audit-management.spec.js) covers the Audit Management page using the shared authenticated session.
+- [`tests/8.notification-management.spec.js`](/Users/reposado/BNJ-Playwright/tests/8.notification-management.spec.js) covers the Notification Management page using the shared authenticated session.
 
 The stored auth state is written to `playwright/.auth/user.json`.
 
@@ -129,6 +131,12 @@ Run only the Audit Management spec:
 npm run test:audit-management
 ```
 
+Run only the Notification Management spec:
+
+```bash
+npm run test:notification-management
+```
+
 Run the CEO Dashboard spec in headed mode:
 
 ```bash
@@ -169,6 +177,12 @@ Run the Audit Management spec in headed mode:
 
 ```bash
 npm run test:audit-management:headed
+```
+
+Run the Notification Management spec in headed mode:
+
+```bash
+npm run test:notification-management:headed
 ```
 
 Run with Playwright UI mode:
@@ -213,6 +227,12 @@ Run the Audit Management spec in UI mode:
 npm run test:audit-management:ui
 ```
 
+Run the Notification Management spec in UI mode:
+
+```bash
+npm run test:notification-management:ui
+```
+
 Run a subset by test title:
 
 ```bash
@@ -253,6 +273,12 @@ Run only the Audit Management upload checks:
 
 ```bash
 npm run test:audit-management:upload
+```
+
+Run only the Notification Management scheduled delivery checks:
+
+```bash
+npm run test:notification-management:scheduled
 ```
 
 List all discovered tests:
@@ -314,6 +340,7 @@ The current suite covers:
 - Target & Benchmark page load, target period, financial target fields, upload area, and basic performance checks
 - User Management page load, search, user table, pagination, chat button, and basic performance checks
 - Audit Management page load, upload sections, footer actions, chat button, and basic performance checks
+- Notification Management page load, health alerts, scheduled delivery, footer actions, chat button, and basic performance checks
 - AI Chatbot launcher, panel content, quick prompts, input, and close behavior
 - Claims dashboard page load
 - Claims general and current operation health sections
