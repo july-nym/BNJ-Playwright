@@ -49,6 +49,7 @@ tests/
   1.ceo-dashboard.spec.js
   2.finance-dashboard.spec.js
   3.claims-dashboard.spec.js
+  4.ai-chatbot.spec.js
 playwright.config.js
 playwright/.auth/user.json
 test-results/
@@ -62,6 +63,7 @@ playwright-report/
 - [`tests/1.ceo-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/1.ceo-dashboard.spec.js) reuses the saved session through `storageState`.
 - [`tests/2.finance-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/2.finance-dashboard.spec.js) covers the Finance dashboard with the same shared authenticated session.
 - [`tests/3.claims-dashboard.spec.js`](/Users/reposado/BNJ-Playwright/tests/3.claims-dashboard.spec.js) covers the Claims dashboard with the same shared authenticated session.
+- [`tests/4.ai-chatbot.spec.js`](/Users/reposado/BNJ-Playwright/tests/4.ai-chatbot.spec.js) focuses on the shared AI Chatbot widget behavior from the dashboard UI.
 
 The stored auth state is written to `playwright/.auth/user.json`.
 
@@ -97,6 +99,12 @@ Run only the Claims Dashboard spec:
 npm run test:claims
 ```
 
+Run only the AI Chatbot widget spec:
+
+```bash
+npm run test:chatbot
+```
+
 Run the CEO Dashboard spec in headed mode:
 
 ```bash
@@ -113,6 +121,12 @@ Run the Claims Dashboard spec in headed mode:
 
 ```bash
 npm run test:claims:headed
+```
+
+Run the AI Chatbot widget spec in headed mode:
+
+```bash
+npm run test:chatbot:headed
 ```
 
 Run with Playwright UI mode:
@@ -133,6 +147,12 @@ Run the Claims Dashboard spec in UI mode:
 npm run test:claims:ui
 ```
 
+Run the AI Chatbot widget spec in UI mode:
+
+```bash
+npm run test:chatbot:ui
+```
+
 Run a subset by test title:
 
 ```bash
@@ -149,6 +169,12 @@ Run the Claims dashboard General Health subset:
 
 ```bash
 npm run test:claims:general-health
+```
+
+Run only the AI Chatbot quick prompt checks:
+
+```bash
+npm run test:chatbot:prompts
 ```
 
 List all discovered tests:
@@ -207,6 +233,7 @@ Prettier configuration lives in [`.prettierrc.json`](/Users/reposado/BNJ-Playwri
 
 The current suite covers:
 
+- AI Chatbot launcher, panel content, quick prompts, input, and close behavior
 - Claims dashboard page load
 - Claims general and current operation health sections
 - Claims score cards and donut charts
