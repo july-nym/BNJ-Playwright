@@ -6,48 +6,90 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   test:
+    # Fork PRs do not receive repository secrets, so skip this job there.
+    if: github.event_name != 'pull_request' || !github.event.pull_request.head.repo.fork
     timeout-minutes: 60
     runs-on: ubuntu-latest
     environment: Configure BNJ
+
     env:
-      BASE_URL: ${{ secrets.BASE_URL }}
-      TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+      BASE_URL:      ${{ secrets.BASE_URL }}
+      TEST_EMAIL:    ${{ secrets.TEST_EMAIL }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-      HEADLESS: true
-      CI: true
+      HEADLESS:      "true"
+      CI:            "true"
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 20
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Browsers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
+
+      - name: Install Playwright system dependencies only (if cached)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
 
       - name: Verify required secrets
         run: |
-          test -n "$BASE_URL"
-          test -n "$TEST_EMAIL"
-          test -n "$TEST_PASSWORD"
+          if [ -z "$BASE_URL" ]; then
+            echo "❌ SECRET: BASE_URL is not set"
+            exit 1
+          fi
+          if [ -z "$TEST_EMAIL" ]; then
+            echo "❌ SECRET: TEST_EMAIL is not set"
+            exit 1
+          fi
+          if [ -z "$TEST_PASSWORD" ]; then
+            echo "❌ SECRET: TEST_PASSWORD is not set"
+            exit 1
+          fi
+          echo "✅ All required secrets are present"
 
       - name: Check formatting
         run: npm run format:check
 
-      - name: Run Playwright tests
-        run: npm test
+      - name: Create auth directory
+        run: mkdir -p playwright/.auth
 
-      - uses: actions/upload-artifact@v4
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright HTML report
+        uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.run_id }}
           path: playwright-report/
           retention-days: 30
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: test-results-${{ github.run_id }}
+          path: test-results/
+          retention-days: 7
