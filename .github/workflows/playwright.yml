@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Playwright Tests
 
 on:
@@ -10,6 +11,7 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    environment: Configure BNJ
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
       TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
