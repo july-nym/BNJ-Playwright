@@ -28,9 +28,9 @@ async function goToUserManagement(page) {
   await expect(
     page.getByRole("heading", { name: /User Management/i }).first()
   ).toBeVisible({ timeout: 30000 });
-  await expect(
-    page.getByPlaceholder("Search user name or email")
-  ).toBeVisible({ timeout: 30000 });
+  await expect(page.getByPlaceholder("Search user name or email")).toBeVisible({
+    timeout: 30000,
+  });
 }
 
 function getUserTable(page) {
@@ -143,7 +143,11 @@ test.describe("User Management - Sanity Check", () => {
       await expect(nameCells.first()).toBeVisible({ timeout: 15000 });
       expect(await nameCells.count()).toBeGreaterThanOrEqual(3);
 
-      for (let index = 0; index < Math.min(3, await nameCells.count()); index += 1) {
+      for (
+        let index = 0;
+        index < Math.min(3, await nameCells.count());
+        index += 1
+      ) {
         await expect(nameCells.nth(index)).not.toHaveText(/^\s*$/);
       }
 
@@ -151,7 +155,9 @@ test.describe("User Management - Sanity Check", () => {
     });
 
     test("TC-UM-010 | User table contains email values", async ({ page }) => {
-      const emails = page.getByText(/.+@.+\..+/).filter({ hasNotText: "Chat with AI" });
+      const emails = page
+        .getByText(/.+@.+\..+/)
+        .filter({ hasNotText: "Chat with AI" });
 
       await expect(emails.first()).toBeVisible({ timeout: 15000 });
       expect(await emails.count()).toBeGreaterThanOrEqual(3);

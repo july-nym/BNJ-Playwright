@@ -58,9 +58,7 @@ test.describe("Chat History - Sanity Check", () => {
       console.log("Chat History page loaded successfully");
     });
 
-    test("TC-CHT-002 | Benjamin & Joseph logo is visible", async ({
-      page,
-    }) => {
+    test("TC-CHT-002 | Benjamin & Joseph logo is visible", async ({ page }) => {
       const logo = page
         .locator('header img, img[alt*="Benjamin"], img[alt*="Joseph"], .logo')
         .first();

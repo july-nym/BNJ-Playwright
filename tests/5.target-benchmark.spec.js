@@ -80,10 +80,12 @@ test.describe("Target & Benchmark - Sanity Check", () => {
         page.getByRole("heading", { name: /Target & Benchmark/i }).first()
       ).toBeVisible({ timeout: 15000 });
       await expect(
-        page.getByText(
-          "Manage the yearly budget, forecast, and performance targets",
-          { exact: false }
-        ).first()
+        page
+          .getByText(
+            "Manage the yearly budget, forecast, and performance targets",
+            { exact: false }
+          )
+          .first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Target & Benchmark heading visible");
     });
@@ -93,9 +95,11 @@ test.describe("Target & Benchmark - Sanity Check", () => {
     test("TC-TBM-003 | Year and quarter controls are visible", async ({
       page,
     }) => {
-      await expect(page.getByText("Year", { exact: true }).first()).toBeVisible({
-        timeout: 15000,
-      });
+      await expect(page.getByText("Year", { exact: true }).first()).toBeVisible(
+        {
+          timeout: 15000,
+        }
+      );
       await expect(
         page.getByText("Quarterly Target Window", { exact: false }).first()
       ).toBeVisible({ timeout: 15000 });
@@ -147,9 +151,11 @@ test.describe("Target & Benchmark - Sanity Check", () => {
 
     test("TC-TBM-007 | Edit window notice is displayed", async ({ page }) => {
       await expect(
-        page.getByText("The targets cannot be created/modified at this time.", {
-          exact: false,
-        }).first()
+        page
+          .getByText("The targets cannot be created/modified at this time.", {
+            exact: false,
+          })
+          .first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Edit window notice visible");
     });
@@ -158,17 +164,21 @@ test.describe("Target & Benchmark - Sanity Check", () => {
       page,
     }) => {
       await expect(
-        page.getByText(
-          "Enter targets and benchmarks manually, or upload a file using the template.",
-          { exact: false }
-        ).first()
+        page
+          .getByText(
+            "Enter targets and benchmarks manually, or upload a file using the template.",
+            { exact: false }
+          )
+          .first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Manual entry/upload instruction visible");
     });
 
     for (const { id, label } of TARGET_FIELDS) {
       test(`${id} | ${label} field is visible`, async ({ page }) => {
-        await expect(page.getByText(label, { exact: false }).first()).toBeVisible({
+        await expect(
+          page.getByText(label, { exact: false }).first()
+        ).toBeVisible({
           timeout: 15000,
         });
         console.log(`${label} field visible`);
@@ -179,7 +189,9 @@ test.describe("Target & Benchmark - Sanity Check", () => {
   test.describe("Upload Area", () => {
     test("TC-TBM-030 | File upload dropzone is visible", async ({ page }) => {
       await expect(
-        page.getByText("Drop your files here or browse", { exact: false }).first()
+        page
+          .getByText("Drop your files here or browse", { exact: false })
+          .first()
       ).toBeVisible({ timeout: 15000 });
       console.log("File upload dropzone visible");
     });

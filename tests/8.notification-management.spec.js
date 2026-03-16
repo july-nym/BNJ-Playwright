@@ -51,7 +51,9 @@ async function goToNotificationManagement(page) {
 }
 
 async function openScheduledDashboardDelivery(page) {
-  await page.getByRole("button", { name: /Scheduled Dashboard Delivery/i }).click();
+  await page
+    .getByRole("button", { name: /Scheduled Dashboard Delivery/i })
+    .click();
   await expect(
     page.getByText("Configure when dashboard reports are automatically sent", {
       exact: false,
@@ -89,9 +91,7 @@ test.describe("Notification Management - Sanity Check", () => {
       console.log("Notification Management page loaded successfully");
     });
 
-    test("TC-NTF-002 | Benjamin & Joseph logo is visible", async ({
-      page,
-    }) => {
+    test("TC-NTF-002 | Benjamin & Joseph logo is visible", async ({ page }) => {
       const logo = page
         .locator('header img, img[alt*="Benjamin"], img[alt*="Joseph"], .logo')
         .first();
@@ -117,7 +117,9 @@ test.describe("Notification Management - Sanity Check", () => {
   });
 
   test.describe("Health Score Alerts", () => {
-    test("TC-NTF-004 | Health Score Alerts tab is visible", async ({ page }) => {
+    test("TC-NTF-004 | Health Score Alerts tab is visible", async ({
+      page,
+    }) => {
       await expect(
         page.getByRole("button", { name: /Health Score Alerts/i })
       ).toBeVisible({ timeout: 15000 });
@@ -161,16 +163,18 @@ test.describe("Notification Management - Sanity Check", () => {
       await expect(page.getByText(/critical/i).first()).toBeVisible({
         timeout: 15000,
       });
-      await expect(page.getByText("Trigger threshold", { exact: false })).toBeVisible(
-        { timeout: 15000 }
-      );
-      await expect(page.getByText("Critical threshold", { exact: false })).toBeVisible(
-        { timeout: 15000 }
-      );
+      await expect(
+        page.getByText("Trigger threshold", { exact: false })
+      ).toBeVisible({ timeout: 15000 });
+      await expect(
+        page.getByText("Critical threshold", { exact: false })
+      ).toBeVisible({ timeout: 15000 });
       console.log("Warning and critical threshold fields visible");
     });
 
-    test("TC-NTF-008 | Threshold inputs show default values", async ({ page }) => {
+    test("TC-NTF-008 | Threshold inputs show default values", async ({
+      page,
+    }) => {
       const thresholdInputs = page.locator('input[type="text"]');
 
       await expect(thresholdInputs.nth(0)).toHaveValue("60");
@@ -178,7 +182,9 @@ test.describe("Notification Management - Sanity Check", () => {
       console.log("Threshold inputs show default values");
     });
 
-    test("TC-NTF-009 | Recipients and channels are visible", async ({ page }) => {
+    test("TC-NTF-009 | Recipients and channels are visible", async ({
+      page,
+    }) => {
       const generalCard = getSectionCard(page, "General");
 
       await expect(
@@ -199,7 +205,9 @@ test.describe("Notification Management - Sanity Check", () => {
 
     test("TC-NTF-010 | Health categories list is visible", async ({ page }) => {
       for (const category of HEALTH_CATEGORIES) {
-        await expect(page.getByText(category, { exact: true }).first()).toBeVisible({
+        await expect(
+          page.getByText(category, { exact: true }).first()
+        ).toBeVisible({
           timeout: 15000,
         });
       }
@@ -234,11 +242,15 @@ test.describe("Notification Management - Sanity Check", () => {
       console.log("Scheduled delivery description visible");
     });
 
-    test("TC-NTF-013 | Dashboard delivery items are visible", async ({ page }) => {
+    test("TC-NTF-013 | Dashboard delivery items are visible", async ({
+      page,
+    }) => {
       for (const item of DASHBOARD_DELIVERY_ITEMS) {
-        await expect(page.getByText(item, { exact: true }).first()).toBeVisible({
-          timeout: 15000,
-        });
+        await expect(page.getByText(item, { exact: true }).first()).toBeVisible(
+          {
+            timeout: 15000,
+          }
+        );
       }
 
       console.log("Dashboard delivery items visible");
@@ -268,10 +280,16 @@ test.describe("Notification Management - Sanity Check", () => {
         ceoDashboardCard.getByText("CEO, Admin", { exact: true })
       ).toBeVisible({ timeout: 15000 });
       await expect(
-        financialDashboardCard.locator("button").filter({ hasText: /^CEO$/ }).first()
+        financialDashboardCard
+          .locator("button")
+          .filter({ hasText: /^CEO$/ })
+          .first()
       ).toBeVisible({ timeout: 15000 });
       await expect(
-        operationsDashboardCard.locator("button").filter({ hasText: /^CEO$/ }).first()
+        operationsDashboardCard
+          .locator("button")
+          .filter({ hasText: /^CEO$/ })
+          .first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Dashboard recipient values visible");
     });

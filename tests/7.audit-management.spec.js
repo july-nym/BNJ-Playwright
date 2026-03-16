@@ -33,7 +33,9 @@ async function goToAuditManagement(page) {
   await expect(
     page.getByRole("heading", { name: /Audit Management/i }).first()
   ).toBeVisible({ timeout: 30000 });
-  await expect(page.getByText("Medical Bill", { exact: false }).first()).toBeVisible({
+  await expect(
+    page.getByText("Medical Bill", { exact: false }).first()
+  ).toBeVisible({
     timeout: 30000,
   });
 }
@@ -76,10 +78,11 @@ test.describe("Audit Management - Sanity Check", () => {
 
     test("TC-AUD-004 | Page description is visible", async ({ page }) => {
       await expect(
-        page.getByText(
-          "Upload claim documents for AI validation.",
-          { exact: false }
-        ).first()
+        page
+          .getByText("Upload claim documents for AI validation.", {
+            exact: false,
+          })
+          .first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Page description visible");
     });
@@ -88,7 +91,9 @@ test.describe("Audit Management - Sanity Check", () => {
   test.describe("Upload Sections", () => {
     for (const { id, title } of DOCUMENT_SECTIONS) {
       test(`${id} | ${title} upload section is visible`, async ({ page }) => {
-        await expect(page.getByText(title, { exact: true }).first()).toBeVisible({
+        await expect(
+          page.getByText(title, { exact: true }).first()
+        ).toBeVisible({
           timeout: 15000,
         });
         console.log(`${title} upload section visible`);
