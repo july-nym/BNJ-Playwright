@@ -17,11 +17,11 @@ jobs:
     environment: BNJ
 
     env:
-      BASE_URL:      ${{ secrets.BASE_URL }}
-      TEST_EMAIL:    ${{ secrets.TEST_EMAIL }}
+      BASE_URL: ${{ secrets.BASE_URL }}
+      TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-      HEADLESS:      "true"
-      CI:            "true"
+      HEADLESS: "true"
+      CI: "true"
 
     steps:
       - name: Checkout repository
