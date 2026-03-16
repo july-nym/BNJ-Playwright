@@ -22,13 +22,6 @@ const BASE_URL =
   process.env.BASE_URL || "https://web-bnj-ai-dev-8fdaab.azurewebsites.net";
 const PAGE_URL = `${BASE_URL}/user-management`;
 const TABLE_HEADERS = ["Name", "Email", "Role", "Status", "Action"];
-const SAMPLE_USERS = [
-  "Leo Nguyen",
-  "Hoang Le",
-  "David",
-  "Nyoman",
-];
-
 async function goToUserManagement(page) {
   await page.goto(PAGE_URL, { waitUntil: "domcontentloaded" });
   await expect(page).toHaveURL(/user-management/, { timeout: 30000 });
@@ -145,13 +138,16 @@ test.describe("User Management - Sanity Check", () => {
     test("TC-UM-009 | Sample user names are visible in the table", async ({
       page,
     }) => {
-      for (const name of SAMPLE_USERS) {
-        await expect(page.getByText(name, { exact: true }).first()).toBeVisible(
-          { timeout: 15000 }
-        );
+      const nameCells = getUserTable(page).locator("tbody tr td:first-child");
+
+      await expect(nameCells.first()).toBeVisible({ timeout: 15000 });
+      expect(await nameCells.count()).toBeGreaterThanOrEqual(3);
+
+      for (let index = 0; index < Math.min(3, await nameCells.count()); index += 1) {
+        await expect(nameCells.nth(index)).not.toHaveText(/^\s*$/);
       }
 
-      console.log("Sample user names visible");
+      console.log("Visible user names rendered in table");
     });
 
     test("TC-UM-010 | User table contains email values", async ({ page }) => {

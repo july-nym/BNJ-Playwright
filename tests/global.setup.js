@@ -73,7 +73,6 @@ setup("authenticate", async ({ page }) => {
 
   console.log("Running global login setup");
   console.log(`BASE_URL: ${BASE_URL}`);
-  console.log(`Email: ${email}`);
 
   ensureAuthDirectory();
   await openDashboard(page);

@@ -59,6 +59,16 @@ async function openScheduledDashboardDelivery(page) {
   ).toBeVisible({ timeout: 15000 });
 }
 
+function getSectionCard(page, text) {
+  return page.locator("div").filter({ hasText: text }).first();
+}
+
+function getScheduledDeliveryCard(page, index) {
+  return page
+    .locator("div.mb-4.border.border-gray-100.rounded-xl.shadow-sm")
+    .nth(index);
+}
+
 function isCriticalConsoleError(message) {
   return !/Failed to load resource: the server responded with a status of 404/i.test(
     message
@@ -169,14 +179,20 @@ test.describe("Notification Management - Sanity Check", () => {
     });
 
     test("TC-NTF-009 | Recipients and channels are visible", async ({ page }) => {
+      const generalCard = getSectionCard(page, "General");
+
       await expect(
-        page.getByText("Operations, Finance, Admin, CEO", { exact: false })
+        generalCard.getByText("Operations, Finance, Admin, CEO", {
+          exact: false,
+        })
       ).toBeVisible({ timeout: 15000 });
       await expect(
-        page.getByText("CEO, Finance, Operations, Admin", { exact: false })
+        generalCard.getByText("CEO, Finance, Operations, Admin", {
+          exact: false,
+        })
       ).toBeVisible({ timeout: 15000 });
       await expect(
-        page.getByText("Email, In-App", { exact: false }).first()
+        generalCard.getByText("Email, In-App", { exact: false }).first()
       ).toBeVisible({ timeout: 15000 });
       console.log("Recipients and channels visible");
     });
@@ -231,22 +247,32 @@ test.describe("Notification Management - Sanity Check", () => {
     test("TC-NTF-014 | Delivery frequency values are visible", async ({
       page,
     }) => {
-      const weeklyTexts = page.getByText("Weekly", { exact: true });
+      for (const [index] of DASHBOARD_DELIVERY_ITEMS.entries()) {
+        const card = getScheduledDeliveryCard(page, index);
+        await expect(card.getByText("Weekly", { exact: true })).toBeVisible({
+          timeout: 15000,
+        });
+      }
 
-      await expect(weeklyTexts.first()).toBeVisible({ timeout: 15000 });
-      expect(await weeklyTexts.count()).toBeGreaterThanOrEqual(3);
       console.log("Delivery frequency values visible");
     });
 
     test("TC-NTF-015 | Dashboard recipient values are visible", async ({
       page,
     }) => {
-      await expect(page.getByText("CEO, Admin", { exact: true })).toBeVisible({
-        timeout: 15000,
-      });
-      await expect(page.getByText("CEO", { exact: true }).first()).toBeVisible({
-        timeout: 15000,
-      });
+      const ceoDashboardCard = getScheduledDeliveryCard(page, 0);
+      const financialDashboardCard = getScheduledDeliveryCard(page, 1);
+      const operationsDashboardCard = getScheduledDeliveryCard(page, 2);
+
+      await expect(
+        ceoDashboardCard.getByText("CEO, Admin", { exact: true })
+      ).toBeVisible({ timeout: 15000 });
+      await expect(
+        financialDashboardCard.locator("button").filter({ hasText: /^CEO$/ }).first()
+      ).toBeVisible({ timeout: 15000 });
+      await expect(
+        operationsDashboardCard.locator("button").filter({ hasText: /^CEO$/ }).first()
+      ).toBeVisible({ timeout: 15000 });
       console.log("Dashboard recipient values visible");
     });
   });

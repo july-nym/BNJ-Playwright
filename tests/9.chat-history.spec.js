@@ -103,9 +103,10 @@ test.describe("Chat History - Sanity Check", () => {
     });
 
     test("TC-CHT-006 | Date separator is visible", async ({ page }) => {
-      await expect(page.getByText("—", { exact: true }).first()).toBeVisible({
-        timeout: 15000,
-      });
+      const dateSeparator = page.locator('input[type="date"] + span').first();
+
+      await expect(dateSeparator).toBeVisible({ timeout: 15000 });
+      await expect(dateSeparator).toHaveText("—");
       console.log("Date separator visible");
     });
   });
